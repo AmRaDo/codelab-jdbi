@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+    <display-name>Hello Core</display-name>
+
+    <!-- forc ejava.util.logging through log4j -->
+    <listener>
+        <listener-class>ning.servlet.filters.guice.SetupJULBridge</listener-class>
+    </listener>
+
+    <!-- Sets up the Guice container -->
+    <listener>
+        <listener-class>ning.servlet.filters.guice.SetupServer</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>guiceModuleClassName</param-name>
+
+        <!-- This param tells the SetupServer listener the root guice module to load -->
+        <param-value>ning.codelab.customer.modules.CustomerServerModule</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>Guice Filter</filter-name>
+        <filter-class>com.google.inject.servlet.GuiceFilter</filter-class>
+    </filter>
+
+    <!-- Run all requests through the Guice servlet filter for handoff to jersey -->
+    <filter-mapping>
+        <filter-name>Guice Filter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!--
+        We must have a servlet of last resort for jetty to pass things through
+        a filter chain. if anything gets to the servlet here it is logged
+     -->
+    <servlet>
+        <servlet-name>log-invalid-resources</servlet-name>
+        <servlet-class>ning.servlet.LogInvalidResourcesServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>log-invalid-resources</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+
+    <session-config>
+        <session-timeout>0</session-timeout>
+    </session-config>
+</web-app>
