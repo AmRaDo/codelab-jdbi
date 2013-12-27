@@ -14,6 +14,6 @@ public interface CustomerPersistance {
 	public void deleteCustomer(int id);
 
 	public List<Customer> getAllCustomers();
-	
+
 	public void clear();
 }

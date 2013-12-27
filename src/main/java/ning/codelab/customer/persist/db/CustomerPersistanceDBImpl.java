@@ -10,8 +10,8 @@ import ning.codelab.customer.persist.CustomerPersistance;
 
 public class CustomerPersistanceDBImpl implements CustomerPersistance {
 
-	
-	//TODO: Dummy implementation to verify the interfaces. Needs to be replaced by the MySQL based JDBI implementation.
+	// TODO: Dummy implementation to verify the interfaces. Needs to be replaced
+	// by the MySQL based JDBI implementation.
 	private Map<Integer, Customer> memDB = new HashMap<Integer, Customer>();
 
 	@Override
@@ -43,6 +43,5 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 	public void clear() {
 		memDB.clear();
 	}
-	
-	
+
 }

@@ -28,57 +28,64 @@ public class CustomerServerModule extends ServletModule {
 
 		install(new ConfigModule());
 
-        /*
-         * The config class works with the ConfigModule to convert system
-         * properties in java objects via Configamajig
-         * (http://git.source.ninginc.com/ning-libs-configamajig.git).
-         * The "EagerSingleton" just tells Guice "do this NOW" (as
-         * opposed to later in the request cycle).
-         */
-        bind(DBConfig.class).toProvider(ConfigModule.provide(DBConfig.class)).asEagerSingleton();
+		/*
+		 * The config class works with the ConfigModule to convert system
+		 * properties in java objects via Configamajig
+		 * (http://git.source.ninginc.com/ning-libs-configamajig.git). The
+		 * "EagerSingleton" just tells Guice "do this NOW" (as opposed to later
+		 * in the request cycle).
+		 */
+		bind(DBConfig.class).toProvider(ConfigModule.provide(DBConfig.class))
+				.asEagerSingleton();
 
-        /* Install the Ning JMX module */
-        install(new JMXModule());
-        
-        /* Install the Ning Logging module */
-        install(new LoggingModule());
-        
-        /* Install the Ning Lifecycle module */
-        install(new LifecycleModule());
+		/* Install the Ning JMX module */
+		install(new JMXModule());
 
-        /* Bind Hello Persistence to Map implementation */
-        bind(CustomerPersistance.class).toProvider(
-            ConfigModule.provide(CustomerPersistanceDBImpl.class)
-            ).asEagerSingleton();
-        
-        /*
-         * These next two bindings configure Jackson
-         * ( http://jackson.codehaus.org/ ) for generating JSON, which is our
-         * most commonly used representation media type for resources.
-         */
-        bind(JacksonJsonProvider.class).toProvider(JacksonJsonProviderWrapper.class)
-            .asEagerSingleton();
+		/* Install the Ning Logging module */
+		install(new LoggingModule());
 
-        /*
-         * This configures the Jackson object mapper to convert JodaTime
-         * DateTime instances into ISO date/time formats.
-         * 
-         * ( http://joda-time.sourceforge.net/ )
-         */
-        bind(ObjectMapper.class).toProvider(new CustomObjectMapperProvider().addGenericSerializer(DateTime.class, new DateTimeSerializer())).asEagerSingleton();
+		/* Install the Ning Lifecycle module */
+		install(new LifecycleModule());
 
-        /*
-         * This instructs the filter to serve all requests through
-         * GuiceContainer, which is actually just Jersey-via-Guice, and to
-         * enable gzip compression in and out.
-         */
-        serve("*").with(GuiceContainer.class,
-            of("com.sun.jersey.spi.container.ContainerRequestFilters", GZIPContentEncodingFilter.class.getName(),
-               "com.sun.jersey.spi.container.ContainerResponseFilters", GZIPContentEncodingFilter.class.getName()));
+		/* Bind Hello Persistence to Map implementation */
+		bind(CustomerPersistance.class).toProvider(
+				ConfigModule.provide(CustomerPersistanceDBImpl.class))
+				.asEagerSingleton();
 
-        /*
-         * Bind a JMX-enabled HelloResource.
-         */
-        bind(CustomerResource.class);
+		/*
+		 * These next two bindings configure Jackson (
+		 * http://jackson.codehaus.org/ ) for generating JSON, which is our most
+		 * commonly used representation media type for resources.
+		 */
+		bind(JacksonJsonProvider.class).toProvider(
+				JacksonJsonProviderWrapper.class).asEagerSingleton();
+
+		/*
+		 * This configures the Jackson object mapper to convert JodaTime
+		 * DateTime instances into ISO date/time formats.
+		 * 
+		 * ( http://joda-time.sourceforge.net/ )
+		 */
+		bind(ObjectMapper.class).toProvider(
+				new CustomObjectMapperProvider().addGenericSerializer(
+						DateTime.class, new DateTimeSerializer()))
+				.asEagerSingleton();
+
+		/*
+		 * This instructs the filter to serve all requests through
+		 * GuiceContainer, which is actually just Jersey-via-Guice, and to
+		 * enable gzip compression in and out.
+		 */
+		serve("*")
+				.with(GuiceContainer.class,
+						of("com.sun.jersey.spi.container.ContainerRequestFilters",
+								GZIPContentEncodingFilter.class.getName(),
+								"com.sun.jersey.spi.container.ContainerResponseFilters",
+								GZIPContentEncodingFilter.class.getName()));
+
+		/*
+		 * Bind a JMX-enabled HelloResource.
+		 */
+		bind(CustomerResource.class);
 	}
 }

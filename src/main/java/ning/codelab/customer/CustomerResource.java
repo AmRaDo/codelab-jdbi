@@ -47,6 +47,10 @@ public class CustomerResource {
 		return "OK";
 	}
 
+	public void cleanAllRecords() {
+		manager.clear();
+	}
+
 	@GET
 	@Path("/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
