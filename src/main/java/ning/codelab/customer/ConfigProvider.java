@@ -18,13 +18,11 @@ public class ConfigProvider implements Provider<DBConfig>{
 	public DBConfig get() {
 		PropertyConfigurator.configure("log4j.properties");
 		Properties props = new Properties();
-		try
-		{
+		try {
 		FileReader reader = new FileReader("Database.properties");
 		props.load(reader);
 		}
-		catch(IOException io)
-		{
+		catch(IOException io) {
 			logger.error("Caught I/O Exception as : "+io.getMessage());
 		}
 		ConfigurationObjectFactory c= new ConfigurationObjectFactory(props);

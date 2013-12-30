@@ -11,14 +11,13 @@ import org.skife.jdbi.v2.DBI;
 
 import com.google.inject.Inject;
 
-
 public class CustomerPersistanceDBImpl implements CustomerPersistance {
 
 	private final DBConfig db;
 	private CustomerDAO dao;
 
 	private static Logger logger= Logger.getLogger(CustomerPersistanceDBImpl.class);
-
+	
 	@Inject
 	public CustomerPersistanceDBImpl(DBConfig dbase) {
 		this.db=dbase;
@@ -27,7 +26,7 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 		makeConnection();
 		createTable();
 	}
-
+	
 	private void makeConnection() {
 		DBI dbAccess = new DBI(db.getUrl()+db.getDataBase(), db.getUser(), db.getPass());
 		this.dao = dbAccess.open(CustomerDAO.class);
@@ -49,20 +48,31 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 	}
 
 	@Override
-	public void addCustomer(int id, String name, String address) {
-		dao.insert(id, name, address);
+	public int addCustomer(int id, String name, String address) {
+		Customer customerWithId = dao.findById(id);
+		if (customerWithId != null) {
+			customerWithId.setAddress(address);
+			customerWithId.setName(name);
+			updateCustomer(id, customerWithId);
+		} else 
+			dao.insert(id, name, address);
+	 return dao.checkCount();
 	}
 
 	@Override
-	public void updateCustomer(int id, Customer customer) {
+	public int updateCustomer(int id, Customer customer) {
 		String name = customer.getName();
 		String address = customer.getAddress();
 		dao.update(id, name, address);
+		return dao.checkCount();
 	}
 
 	@Override
-	public void deleteCustomer(int id) {
-		dao.delete(id);
+	public int deleteCustomer(int id) {
+		Customer customerWithId = dao.findById(id);
+		if(customerWithId!=null)
+			dao.delete(id);
+		return dao.checkCount();
 	}
 
 	@Override
@@ -71,7 +81,12 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 	}
 
 	@Override
-	public void clear() {
+	public int clear() {
 		dao.clearAllRecords();
+		return dao.checkCount();
+	}
+	
+	public void close()	{
+		dao.close(); //Closing Handlers
 	}
 }
