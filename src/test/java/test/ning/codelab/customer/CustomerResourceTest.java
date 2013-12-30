@@ -5,6 +5,7 @@ import ning.codelab.customer.CustomerResource;
 import ning.codelab.customer.modules.CustomerServerModule;
 import ning.codelab.customer.persist.CustomerPersistance;
 
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.Test;
 
 import com.google.inject.Guice;
@@ -85,5 +86,12 @@ public class CustomerResourceTest {
 		assert 1 == customer.getId();
 		assert "updatedName".equals(customer.getName());
 		assert "Pune".equals(customer.getAddress());
+	}
+	
+	@AfterSuite
+	public void destructAllfromDB()
+	{
+		CustomerResource customerResource = getCustomerResource();
+		customerResource.cleanAllRecords();
 	}
 }
