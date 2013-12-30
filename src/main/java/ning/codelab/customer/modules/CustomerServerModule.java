@@ -1,12 +1,12 @@
 package ning.codelab.customer.modules;
 
 import static com.google.common.collect.ImmutableMap.of;
+import ning.codelab.customer.ConfigProvider;
 import ning.codelab.customer.CustomerResource;
 import ning.codelab.customer.DBConfig;
 import ning.codelab.customer.json.JacksonJsonProviderWrapper;
 import ning.codelab.customer.persist.CustomerPersistance;
 import ning.codelab.customer.persist.db.CustomerPersistanceDBImpl;
-import ning.configamajig.v1.ConfigModule;
 import ning.guice.lifecycle.LifecycleModule;
 import ning.jackson.guice.CustomObjectMapperProvider;
 import ning.jackson.serializers.DateTimeSerializer;
@@ -26,7 +26,8 @@ public class CustomerServerModule extends ServletModule {
 	protected void configureServlets() {
 		// bind resource classes here
 
-		install(new ConfigModule());
+		//Commented as we are using new & latest configMagic library
+		//install(new ConfigModule());
 
 		/*
 		 * The config class works with the ConfigModule to convert system
@@ -35,8 +36,11 @@ public class CustomerServerModule extends ServletModule {
 		 * "EagerSingleton" just tells Guice "do this NOW" (as opposed to later
 		 * in the request cycle).
 		 */
-		bind(DBConfig.class).toProvider(ConfigModule.provide(DBConfig.class))
-				.asEagerSingleton();
+		
+		//Commented as we are using new & latest configMagic library
+		/*bind(DBConfig.class).toProvider(ConfigModule.provide(DBConfig.class))
+				.asEagerSingleton();*/
+		bind(DBConfig.class).toProvider(ConfigProvider.class).asEagerSingleton();
 
 		/* Install the Ning JMX module */
 		install(new JMXModule());
@@ -48,10 +52,12 @@ public class CustomerServerModule extends ServletModule {
 		install(new LifecycleModule());
 
 		/* Bind Hello Persistence to Map implementation */
-		bind(CustomerPersistance.class).toProvider(
+		//Commented as we are using new & latest configMagic library
+		/*bind(CustomerPersistance.class).toProvider(
 				ConfigModule.provide(CustomerPersistanceDBImpl.class))
-				.asEagerSingleton();
-
+				.asEagerSingleton();*/
+		
+		bind(CustomerPersistance.class).to(CustomerPersistanceDBImpl.class).asEagerSingleton();
 		/*
 		 * These next two bindings configure Jackson (
 		 * http://jackson.codehaus.org/ ) for generating JSON, which is our most

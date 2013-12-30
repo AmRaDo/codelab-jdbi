@@ -41,6 +41,8 @@ public class CustomerResource {
 		if (customerWithId != null) {
 			customerWithId.setAddress(address);
 			customerWithId.setName(name);
+			//Update Customer with present id
+			manager.updateCustomer(id, customerWithId);
 		} else {
 			manager.addCustomer(id, name, address);
 		}
