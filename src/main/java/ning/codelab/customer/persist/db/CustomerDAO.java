@@ -11,7 +11,7 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.binders.Bind;
 
 
-public interface MyDao {
+public interface CustomerDAO {
 	
 	  @SqlUpdate("create table customer (c_id int primary key, c_name varchar(30) , c_address varchar(50))")
 	  void create();
@@ -37,5 +37,7 @@ public interface MyDao {
 	  List<Customer> showAll();
 	  
 	  @SqlUpdate("delete from customer")
+	  void clearAllRecords();
+
 	  void close();
 }

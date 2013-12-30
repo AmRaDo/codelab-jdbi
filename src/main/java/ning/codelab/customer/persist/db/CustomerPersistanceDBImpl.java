@@ -19,7 +19,7 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 	//private Map<Integer, Customer> memDB = new HashMap<Integer, Customer>();
 	
 	private final DBConfig db;
-	private MyDao dao;
+	private CustomerDAO dao;
 	
 	private static Logger logger= Logger.getLogger(CustomerPersistanceDBImpl.class);
 	
@@ -34,7 +34,7 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 	
 	private void makeConnection() {
 		DBI dbAccess = new DBI(db.getUrl()+db.getDataBase(), db.getUser(), db.getPass());
-		this.dao = dbAccess.open(MyDao.class);
+		this.dao = dbAccess.open(CustomerDAO.class);
 	}
 
 	private void createTable() {
@@ -82,6 +82,6 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 	@Override
 	public void clear() {
 		//memDB.clear();
-		dao.close();
+		dao.clearAllRecords();
 	}
 }
