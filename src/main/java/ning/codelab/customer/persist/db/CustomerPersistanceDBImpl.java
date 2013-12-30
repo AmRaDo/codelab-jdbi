@@ -14,15 +14,11 @@ import com.google.inject.Inject;
 
 public class CustomerPersistanceDBImpl implements CustomerPersistance {
 
-	// TODO: Dummy implementation to verify the interfaces. Needs to be replaced
-	// by the MySQL based JDBI implementation.
-	//private Map<Integer, Customer> memDB = new HashMap<Integer, Customer>();
-	
 	private final DBConfig db;
 	private CustomerDAO dao;
-	
+
 	private static Logger logger= Logger.getLogger(CustomerPersistanceDBImpl.class);
-	
+
 	@Inject
 	public CustomerPersistanceDBImpl(DBConfig dbase) {
 		this.db=dbase;
@@ -31,7 +27,7 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 		makeConnection();
 		createTable();
 	}
-	
+
 	private void makeConnection() {
 		DBI dbAccess = new DBI(db.getUrl()+db.getDataBase(), db.getUser(), db.getPass());
 		this.dao = dbAccess.open(CustomerDAO.class);
@@ -49,19 +45,16 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 
 	@Override
 	public Customer getCustomerWithId(int id) {
-		//return memDB.get(id);
 		return dao.findById(id);
 	}
 
 	@Override
 	public void addCustomer(int id, String name, String address) {
-		//memDB.put(id, new Customer(name, id, address));
 		dao.insert(id, name, address);
 	}
 
 	@Override
 	public void updateCustomer(int id, Customer customer) {
-		//memDB.put(id, customer);
 		String name = customer.getName();
 		String address = customer.getAddress();
 		dao.update(id, name, address);
@@ -69,19 +62,16 @@ public class CustomerPersistanceDBImpl implements CustomerPersistance {
 
 	@Override
 	public void deleteCustomer(int id) {
-		//memDB.remove(id);
 		dao.delete(id);
 	}
 
 	@Override
 	public List<Customer> getAllCustomers() {
-		//return new ArrayList<Customer>(memDB.values());
 		return dao.showAll();
 	}
 
 	@Override
 	public void clear() {
-		//memDB.clear();
 		dao.clearAllRecords();
 	}
 }

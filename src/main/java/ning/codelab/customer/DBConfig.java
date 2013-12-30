@@ -10,7 +10,7 @@ public interface DBConfig {
 
 	@Config("connection.dbase")
 	public abstract String getDataBase();
-	
+
 	@Config("connection.user")
 	@Default("")
 	public abstract String getUser();

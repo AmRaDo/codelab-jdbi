@@ -26,21 +26,11 @@ public class CustomerServerModule extends ServletModule {
 	protected void configureServlets() {
 		// bind resource classes here
 
-		//Commented as we are using new & latest configMagic library
-		//install(new ConfigModule());
+		// Commented as we are using new & latest configMagic library
+		// install(new ConfigModule());
 
-		/*
-		 * The config class works with the ConfigModule to convert system
-		 * properties in java objects via Configamajig
-		 * (http://git.source.ninginc.com/ning-libs-configamajig.git). The
-		 * "EagerSingleton" just tells Guice "do this NOW" (as opposed to later
-		 * in the request cycle).
-		 */
-		
-		//Commented as we are using new & latest configMagic library
-		/*bind(DBConfig.class).toProvider(ConfigModule.provide(DBConfig.class))
-				.asEagerSingleton();*/
-		bind(DBConfig.class).toProvider(ConfigProvider.class).asEagerSingleton();
+		bind(DBConfig.class).toProvider(ConfigProvider.class)
+				.asEagerSingleton();
 
 		/* Install the Ning JMX module */
 		install(new JMXModule());
@@ -51,13 +41,8 @@ public class CustomerServerModule extends ServletModule {
 		/* Install the Ning Lifecycle module */
 		install(new LifecycleModule());
 
-		/* Bind Hello Persistence to Map implementation */
-		//Commented as we are using new & latest configMagic library
-		/*bind(CustomerPersistance.class).toProvider(
-				ConfigModule.provide(CustomerPersistanceDBImpl.class))
-				.asEagerSingleton();*/
-		
-		bind(CustomerPersistance.class).to(CustomerPersistanceDBImpl.class).asEagerSingleton();
+		bind(CustomerPersistance.class).to(CustomerPersistanceDBImpl.class)
+				.asEagerSingleton();
 		/*
 		 * These next two bindings configure Jackson (
 		 * http://jackson.codehaus.org/ ) for generating JSON, which is our most
@@ -89,9 +74,6 @@ public class CustomerServerModule extends ServletModule {
 								"com.sun.jersey.spi.container.ContainerResponseFilters",
 								GZIPContentEncodingFilter.class.getName()));
 
-		/*
-		 * Bind a JMX-enabled HelloResource.
-		 */
 		bind(CustomerResource.class);
 	}
 }
