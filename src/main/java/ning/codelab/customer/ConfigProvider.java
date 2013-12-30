@@ -10,24 +10,21 @@ import org.skife.config.ConfigurationObjectFactory;
 
 import com.google.inject.Provider;
 
-public class ConfigProvider implements Provider<DBConfig>{
+public class ConfigProvider implements Provider<DBConfig> {
 
-	private static Logger logger= Logger.getLogger(ConfigProvider.class);
-	
+	private static Logger logger = Logger.getLogger(ConfigProvider.class);
+
 	@Override
 	public DBConfig get() {
 		PropertyConfigurator.configure("log4j.properties");
 		Properties props = new Properties();
-		try
-		{
-		FileReader reader = new FileReader("Database.properties");
-		props.load(reader);
+		try {
+			FileReader reader = new FileReader("Database.properties");
+			props.load(reader);
+		} catch (IOException io) {
+			logger.error("Caught I/O Exception as : " + io.getMessage());
 		}
-		catch(IOException io)
-		{
-			logger.error("Caught I/O Exception as : "+io.getMessage());
-		}
-		ConfigurationObjectFactory c= new ConfigurationObjectFactory(props);
+		ConfigurationObjectFactory c = new ConfigurationObjectFactory(props);
 		return c.build(DBConfig.class);
 	}
 
